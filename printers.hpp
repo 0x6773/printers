@@ -7,7 +7,8 @@
 // instead of value in it.
 #define SHOW_ADDR
 
-#include <bits/stdc++.h>
+#include <iostream>
+#include <unordered_map>
 
 namespace printers
 {
@@ -173,6 +174,9 @@ namespace printers
 		return xx;
 	}
 
+// for std::vector<>
+#ifdef _GLIBCXX_VECTOR
+
 	template<typename T, typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
 			const std::vector<T, _Alloc>& ar)
@@ -180,6 +184,8 @@ namespace printers
 		boxBraces.printElementsCont(ar, "vector", ar.size());
 		return xx;
 	}
+
+#endif
 
 	template<typename T, size_t N>
 	std::enable_if_t<!(std::is_same<char, T>::value ||
@@ -216,6 +222,8 @@ namespace printers
 		return xx;
 	}
 
+// for std::array<>
+#ifdef _GLIBCXX_ARRAY
 	template<typename T, size_t N> std::ostream&
 		operator<<(std::ostream& xx,
 			const std::array<T, N>& ar)
@@ -223,7 +231,10 @@ namespace printers
 		boxBraces.printElementsCont(ar, "array", N);
 		return xx;
 	}
+#endif
 
+// for std::list<>
+#ifdef _GLIBCXX_LIST
 	template<typename T, typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
 			const std::list<T, _Alloc>& ar)
@@ -231,7 +242,10 @@ namespace printers
 		curlyBraces.printElementsCont(ar, "list", ar.size());
 		return xx;
 	}
+#endif
 
+// for std::forward_list<>
+#ifdef _GLIBCXX_FORWARD_LIST
 	template<typename T, typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
 			const std::forward_list<T, _Alloc>& ar)
@@ -242,7 +256,10 @@ namespace printers
 		Helpers::delimiter = _del;
 		return xx;
 	}
+#endif
 
+// for std::unordered_set<>
+#ifdef _GLIBCXX_UNORDERED_SET
 	template<typename T, typename _Hasher,
 		typename _Key, typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
@@ -251,7 +268,10 @@ namespace printers
 		boxBraces.printElementsCont(ar, "unordered_set", ar.size());
 		return xx;
 	}
+#endif
 
+// for std::set<>
+#ifdef _GLIBCXX_SET
 	template<typename T, typename _Pr,
 		typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
@@ -260,7 +280,10 @@ namespace printers
 		boxBraces.printElementsCont(ar, "set", ar.size());
 		return xx;
 	}
+#endif
 
+// for std::unordered_multiset<>
+#ifdef _GLIBCXX_UNORDERED_SET
 	template<typename T, typename _Hasher,
 		typename _Key, typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
@@ -269,7 +292,10 @@ namespace printers
 		boxBraces.printElementsCont(ar, "unordered_multiset", ar.size());
 		return xx;
 	}
+#endif
 
+// for std::multiset<>
+#ifdef _GLIBCXX_SET
 	template<typename T, typename _Pr,
 		typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
@@ -278,7 +304,10 @@ namespace printers
 		boxBraces.printElementsCont(ar, "multiset", ar.size());
 		return xx;
 	}
+#endif
 
+// for std::map<>
+#ifdef _GLIBCXX_MAP
 	template<typename T1, typename T2,
 		typename _Pr, typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
@@ -287,7 +316,10 @@ namespace printers
 		boxBraces.printElementsCont(ar, "map", ar.size());
 		return xx;
 	}
+#endif
 
+// for std::unordered_map<>
+#ifdef _GLIBCXX_UNORDERED_MAP
 	template<typename T1, typename T2, typename _Hasher,
 		typename _Key, typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
@@ -296,7 +328,10 @@ namespace printers
 		boxBraces.printElementsCont(ar, "unordered_map", ar.size());
 		return xx;
 	}
+#endif
 
+// for std::multimap<>
+#ifdef _GLIBCXX_MAP
 	template<typename T1, typename T2,
 		typename _Pr, typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
@@ -305,7 +340,10 @@ namespace printers
 		boxBraces.printElementsCont(ar, "multimap", ar.size());
 		return xx;
 	}
+#endif
 
+// for std::unordered_multimap<>
+#ifdef _GLIBCXX_UNORDERED_MAP
 	template<typename T1, typename T2, typename _Hasher,
 		typename _Key, typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
@@ -314,7 +352,10 @@ namespace printers
 		boxBraces.printElementsCont(ar, "unordered_multimap", ar.size());
 		return xx;
 	}
+#endif
 
+// for std::shared_ptr<> and std::unique_ptr<>
+#ifdef _GLIBCXX_MEMORY
 	template<typename T> std::ostream&
 		operator<<(std::ostream& xx,
 			const std::shared_ptr<T>& sp)
@@ -330,7 +371,7 @@ namespace printers
 		angleBraces.printElementsPtr(up, "unique_ptr");
 		return xx;
 	}
-
+#endif
 
 	template<typename T>
 	void print_ptr(const T* ar, size_t N)
