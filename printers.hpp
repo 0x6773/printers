@@ -5,7 +5,7 @@
 
 // Comment out below line to show address of pointer
 // instead of value in it.
-#define SHOW_ADDR
+//#define SHOW_ADDR
 
 #include <iostream>
 #include <unordered_map>
@@ -22,6 +22,7 @@ namespace printers
 			{ "carray", "carr" },
 			{ "const_iterator", "citr" },
 			{ "const_pointer", "cptr" },
+			{ "const_reverse_iterator", "critr"},
 			{ "forward_list", "flst" },
 			{ "iterator", "itr" },
 			{ "list", "lst" },
@@ -30,6 +31,7 @@ namespace printers
 			{ "multiset", "mset" },
 			{ "pair", "pr" },
 			{ "pointer", "ptr" },
+			{ "reverse_iterator", "ritr"},
 			{ "set", "set" },
 			{ "shared_ptr", "sp" },
 			{ "tuple", "tp" },
@@ -196,12 +198,22 @@ namespace printers
 		return xx;
 	}
 
+	template<typename T>
+  struct is_reverse_iterator : false_type { };
+
+  template<typename T>
+  struct is_reverse_iterator<reverse_iterator<T>> : true_type { };
+
 	template<typename T,
 		typename S = typename std::iterator_traits<T>::reference>
 #ifdef SHOW_ADDR
 		std::enable_if_t<!std::is_pointer<T>::value, std::ostream&>
 #else
-		std::ostream&
+		std::enable_if_t<!(std::is_same<T, char const*>::value ||
+			std::is_same<T, wchar_t const*>::value ||
+			std::is_same<T, wchar_t*>::value ||
+			std::is_same<T, char*>::value), std::ostream&>
+		//std::ostream&
 #endif
 	operator<<(std::ostream& xx, const T& it)
 	{
@@ -214,10 +226,20 @@ namespace printers
 		}
 		else
 		{
-			if (std::is_const<std::remove_reference_t<S>>::value)
-				angleBraces.printElementsPtr(it, "const_iterator");
+			if(printers::is_reverse_iterator<T>::value)
+			{
+				if (std::is_const<std::remove_reference_t<S>>::value)
+					angleBraces.printElementsPtr(it, "const_reverse_iterator");
+				else
+					angleBraces.printElementsPtr(it, "reverse_iterator");
+			}
 			else
-				angleBraces.printElementsPtr(it, "iterator");
+			{
+				if (std::is_const<std::remove_reference_t<S>>::value)
+					angleBraces.printElementsPtr(it, "const_iterator");
+				else
+					angleBraces.printElementsPtr(it, "iterator");
+			}
 		}
 		return xx;
 	}
@@ -378,7 +400,13 @@ namespace printers
 	{
 		std::cout << "ptr[" << N << "][";
 		for (size_t i = 0; i < N; ++i)
-			std::cout << ar[i] << ", ";
+			std::cout <<
+#ifdef SHOW_ADDR
+				&ar[i]
+#else
+				ar[i]
+#endif
+				<< ", ";
 		std::cout << "\b\b]" << std::endl;
 	}
 }
