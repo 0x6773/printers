@@ -12,88 +12,6 @@
 
 namespace printers
 {
-	// Declaration of all functions
-	template<typename T1, typename T2>
-	std::ostream& operator<<(std::ostream&, const std::pair<T1, T2>&);
-
-	template<typename... Types>
-	std::ostream& operator<<(std::ostream&, const std::tuple<Types...>&);
-
-#if defined(_GLIBCXX_VECTOR) || defined(_LIBCPP_VECTOR)
-	template<typename T, typename _Alloc>
-	std::ostream& operator<<(std::ostream&, const std::vector<T, _Alloc>&);
-#endif
-
-	template<typename T, size_t N>
-	std::enable_if_t<!(std::is_same<char, T>::value || std::is_same<wchar_t, T>::value), std::ostream&>
-	operator<<(std::ostream&, const T(&)[N]);
-
-	template<typename T, typename S>
-#ifdef SHOW_ADDR
-		std::enable_if_t<!std::is_pointer<T>::value, std::ostream&>
-#else
-		std::enable_if_t<!(std::is_same<T, char const*>::value || std::is_same<T, wchar_t const*>::value || std::is_same<T, wchar_t*>::value || std::is_same<T, char*>::value), std::ostream&>
-#endif
-	operator<<(std::ostream&, const T&);
-
-#if defined(_GLIBCXX_ARRAY) || defined(_LIBCPP_ARRAY)
-	template<typename T, size_t N>
-	std::ostream& operator<<(std::ostream&, const std::array<T, N>&);
-#endif
-
-#if defined(_GLIBCXX_LIST) || defined(_LIBCPP_LIST)
-	template<typename T, typename _Alloc>
-	std::ostream& operator<<(std::ostream&, const std::list<T, _Alloc>&);
-#endif
-
-#if defined(_GLIBCXX_FORWARD_LIST) || defined(_LIBCPP_FORWARD_LIST)
-	template<typename T, typename _Alloc>
-	std::ostream& operator<<(std::ostream&, const std::forward_list<T, _Alloc>&);
-#endif
-
-#if defined(_GLIBCXX_UNORDERED_SET) || defined(_LIBCPP_UNORDERED_SET)
-	template<typename T, typename _Hasher, typename _Key, typename _Alloc>
-	std::ostream& operator<<(std::ostream&, const std::unordered_set<T, _Hasher, _Key, _Alloc>&);
-
-	template<typename T, typename _Hasher, typename _Key, typename _Alloc>
-	std::ostream& operator<<(std::ostream&, const std::unordered_multiset<T, _Hasher, _Key, _Alloc>&);
-#endif
-
-#if defined(_GLIBCXX_SET) || defined(_LIBCPP_SET)
-	template<typename T, typename _Pr, typename _Alloc>
-	std::ostream& operator<<(std::ostream&, const std::set<T, _Pr, _Alloc>&);
-
-	template<typename T, typename _Pr, typename _Alloc>
-	std::ostream& operator<<(std::ostream&, const std::multiset<T, _Pr, _Alloc>&);
-#endif
-
-#if defined(_GLIBCXX_MAP) || defined(_LIBCPP_MAP)
-	template<typename T1, typename T2, typename _Pr, typename _Alloc>
-	std::ostream& operator<<(std::ostream&, const std::map<T1, T2, _Pr, _Alloc>&);
-
-	template<typename T1, typename T2, typename _Pr, typename _Alloc>
-	std::ostream& operator<<(std::ostream&, const std::multimap<T1, T2, _Pr, _Alloc>&);
-#endif
-
-#if defined(_GLIBCXX_UNORDERED_MAP) || defined(_LIBCPP_UNORDERED_MAP)
-	template<typename T1, typename T2, typename _Hasher, typename _Key, typename _Alloc>
-	std::ostream& operator<<(std::ostream&, const std::unordered_map<T1, T2, _Hasher, _Key, _Alloc>&);
-
-	template<typename T1, typename T2, typename _Hasher, typename _Key, typename _Alloc>
-	std::ostream& operator<<(std::ostream&, const std::unordered_multimap<T1, T2, _Hasher, _Key, _Alloc>&);
-#endif
-
-#if defined(_GLIBCXX_MEMORY) || defined(_LIBCPP_MEMORY)
-	template<typename T>
-	std::ostream& operator<<(std::ostream&, const std::shared_ptr<T>&);
-
-	template<typename T>
-	std::ostream& operator<<(std::ostream&, const std::unique_ptr<T>&);
-#endif
-}
-
-namespace printers
-{
 	namespace Helpers
 	{
 		std::string delimiter = ", ";
@@ -134,7 +52,7 @@ namespace printers
 				TuplePrinter<N - 1>::print(ar);
 				typedef typename std::remove_const<
 					typename std::remove_reference<
-					decltype(std::get<N - 1>(ar))>::type>::type TT;
+						decltype(std::get<N - 1>(ar))>::type>::type TT;
 				if (std::is_same<std::string, TT>::value)
 					std::cout << "\"" << std::get<N - 1>(ar) << "\"" << delimiter;
 				else
