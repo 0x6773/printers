@@ -1,9 +1,15 @@
 #define INCLUDE_ALL
 #include "stdafx.h"
 #include "first.hpp"
+#include "printers.hpp"
 #define PRINT_ALL
 using namespace std;
 using namespace mydetails;
+using namespace printers;
+
+#ifndef LOL
+#define LOL(X) std::cout << #X << " : " << (X) << std::endl
+#endif
 
 int main()
 {
@@ -11,18 +17,18 @@ int main()
   pair<vector<string>,vector<float>> ar01({"1","2","3","4"},
 					 {2.5,3.54,4.23,5.45});
   cout<<"Pair<> & Vector<> :"<<endl;
-  cout<<ar01<<endl;
+  LOL(ar01);
   cout<<endl;
 
   // C-Array
   string ar02[4] = {"Govind","Sahai","ABVG","dfs"};
   int ar03[] = {6,3,6,3,5,6,0,9};
-  int ar04[3][4] = {1,2,3,4,5,6,7,8,9,10,11,12};
+  int ar04[3][4] = {{1,2,3,4},{5,6,7,8},{9,10,11,12}};
   cout<<"C - arrays : "<<endl;
-  cout<<ar02<<endl;
+  LOL(ar02);
 #ifdef PRINT_ALL
-  cout<<ar03<<endl;
-  cout<<ar04<<endl;
+  LOL(ar03);
+  LOL(ar04);
 #endif
   cout<<endl;
 
@@ -31,23 +37,23 @@ int main()
   array<int, 8> ar06 = {6,3,6,3,5,6,0,9};
   array<int[4], 3> ar07 = {1,2,3,4,5,6,7,8,9,10,11,12};
   cout<<"std::arrays<> : "<<endl;
-  cout<<ar05<<endl;
+  LOL(ar05);
 #ifdef PRINT_ALL
-  cout<<ar06<<endl;
-  cout<<ar07<<endl;
+  LOL(ar06);
+  LOL(ar07);
 #endif
   cout<<endl;
 
   // std::unordered_set<>
   unordered_set<string> ar08 = {"Govind", "Sahai"};
   cout<<"std::unordered_set<> : "<<endl;
-  cout<<ar08<<endl;
+  LOL(ar08);
   cout<<endl;
 
   // std::list<>
   list<int> ar09 = {1,2,3,4};
   cout<<"std::list<> : "<<endl;
-  cout<<ar09<<endl;
+  LOL(ar09);
   cout<<endl;
 
   // std::map<>
@@ -55,10 +61,10 @@ int main()
   map<int, string> ar11 = {{2,"Govind"},{4,"Sahai"}};
   map<string, string> ar12 = {{"Govind","dnivoG"},{"Sahai","iahaS"}};
   cout<<"std::map<> : "<<endl;
-  cout<<ar10<<endl;
+  LOL(ar10);
 #ifdef PRINT_ALL
-  cout<<ar11<<endl;
-  cout<<ar12<<endl;
+  LOL(ar11);
+  LOL(ar12);
 #endif
   cout<<endl;
 
@@ -73,14 +79,14 @@ int main()
   get<2>(ar15) = make_pair("Govind", 20.5);
   get<3>(ar15) = 100;
   cout<<"std::tuple<> :"<<endl;
-  cout<<ar13<<endl;
+  LOL(ar13);
 #ifdef PRINT_ALL
-  cout<<ar14<<endl;
-  cout<<ar15<<endl;
+  LOL(ar14);
+  LOL(ar15);
 #endif
   cout<<endl;
 
 
-  
+
   return 0;
 }

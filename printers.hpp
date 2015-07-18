@@ -12,6 +12,88 @@
 
 namespace printers
 {
+	// Declaration of all functions
+	template<typename T1, typename T2>
+	std::ostream& operator<<(std::ostream&, const std::pair<T1, T2>&);
+
+	template<typename... Types>
+	std::ostream& operator<<(std::ostream&, const std::tuple<Types...>&);
+
+#if defined(_GLIBCXX_VECTOR) || defined(_LIBCPP_VECTOR)
+	template<typename T, typename _Alloc>
+	std::ostream& operator<<(std::ostream&, const std::vector<T, _Alloc>&);
+#endif
+
+	template<typename T, size_t N>
+	std::enable_if_t<!(std::is_same<char, T>::value || std::is_same<wchar_t, T>::value), std::ostream&>
+	operator<<(std::ostream&, const T(&)[N]);
+
+	template<typename T, typename S>
+#ifdef SHOW_ADDR
+		std::enable_if_t<!std::is_pointer<T>::value, std::ostream&>
+#else
+		std::enable_if_t<!(std::is_same<T, char const*>::value || std::is_same<T, wchar_t const*>::value || std::is_same<T, wchar_t*>::value || std::is_same<T, char*>::value), std::ostream&>
+#endif
+	operator<<(std::ostream&, const T&);
+
+#if defined(_GLIBCXX_ARRAY) || defined(_LIBCPP_ARRAY)
+	template<typename T, size_t N>
+	std::ostream& operator<<(std::ostream&, const std::array<T, N>&);
+#endif
+
+#if defined(_GLIBCXX_LIST) || defined(_LIBCPP_LIST)
+	template<typename T, typename _Alloc>
+	std::ostream& operator<<(std::ostream&, const std::list<T, _Alloc>&);
+#endif
+
+#if defined(_GLIBCXX_FORWARD_LIST) || defined(_LIBCPP_FORWARD_LIST)
+	template<typename T, typename _Alloc>
+	std::ostream& operator<<(std::ostream&, const std::forward_list<T, _Alloc>&);
+#endif
+
+#if defined(_GLIBCXX_UNORDERED_SET) || defined(_LIBCPP_UNORDERED_SET)
+	template<typename T, typename _Hasher, typename _Key, typename _Alloc>
+	std::ostream& operator<<(std::ostream&, const std::unordered_set<T, _Hasher, _Key, _Alloc>&);
+
+	template<typename T, typename _Hasher, typename _Key, typename _Alloc>
+	std::ostream& operator<<(std::ostream&, const std::unordered_multiset<T, _Hasher, _Key, _Alloc>&);
+#endif
+
+#if defined(_GLIBCXX_SET) || defined(_LIBCPP_SET)
+	template<typename T, typename _Pr, typename _Alloc>
+	std::ostream& operator<<(std::ostream&, const std::set<T, _Pr, _Alloc>&);
+
+	template<typename T, typename _Pr, typename _Alloc>
+	std::ostream& operator<<(std::ostream&, const std::multiset<T, _Pr, _Alloc>&);
+#endif
+
+#if defined(_GLIBCXX_MAP) || defined(_LIBCPP_MAP)
+	template<typename T1, typename T2, typename _Pr, typename _Alloc>
+	std::ostream& operator<<(std::ostream&, const std::map<T1, T2, _Pr, _Alloc>&);
+
+	template<typename T1, typename T2, typename _Pr, typename _Alloc>
+	std::ostream& operator<<(std::ostream&, const std::multimap<T1, T2, _Pr, _Alloc>&);
+#endif
+
+#if defined(_GLIBCXX_UNORDERED_MAP) || defined(_LIBCPP_UNORDERED_MAP)
+	template<typename T1, typename T2, typename _Hasher, typename _Key, typename _Alloc>
+	std::ostream& operator<<(std::ostream&, const std::unordered_map<T1, T2, _Hasher, _Key, _Alloc>&);
+
+	template<typename T1, typename T2, typename _Hasher, typename _Key, typename _Alloc>
+	std::ostream& operator<<(std::ostream&, const std::unordered_multimap<T1, T2, _Hasher, _Key, _Alloc>&);
+#endif
+
+#if defined(_GLIBCXX_MEMORY) || defined(_LIBCPP_MEMORY)
+	template<typename T>
+	std::ostream& operator<<(std::ostream&, const std::shared_ptr<T>&);
+
+	template<typename T>
+	std::ostream& operator<<(std::ostream&, const std::unique_ptr<T>&);
+#endif
+}
+
+namespace printers
+{
 	namespace Helpers
 	{
 		std::string delimiter = ", ";
@@ -75,56 +157,65 @@ namespace printers
 			virtual void printEndBrace() = 0;
 
 			template<typename T>
-			void printElementsCont(const T& ar, std::string&& _name, int N)
-			{
-				std::cout << Names[_name];
-				if (N > -1)
-					std::cout << N;
-				printOpenBrace();
-				for (const auto& x : ar)
-				{
-					typedef typename std::remove_const_t<
-						typename std::remove_reference_t<decltype(x) >> TT;
-					if (std::is_same<std::string, TT>::value)
-						std::cout << "\"" << x << "\"" << delimiter;
-					else
-						std::cout << x << delimiter;
-				}
-				if (N)
-					for (size_t i = 0; i < delimiter.size(); ++i)
-					std::cout << '\b';
-				printEndBrace();
-				return;
-			}
+			void printElementsCont(const T&, std::string&&, int);
 
 			template<typename T>
-			void printElementsPtr(const T& ptr, std::string&& _name)
-			{
-				std::cout << Names[_name];
-				printOpenBrace();
-				typedef typename std::remove_const_t<
-					typename std::remove_reference_t<decltype(*ptr) >> TT;
-				if (std::is_same<std::string, TT>::value)
-					std::cout << "\"" << *ptr << "\"";
-				else
-					std::cout << *ptr;
-				printEndBrace();
-				return;
-			}
+			void printElementsPtr(const T&, std::string&&);
 
 			template<typename... TArgs>
-			void printElementsTup(const std::tuple<TArgs...>& tup, std::string&& _name)
+			void printElementsTup(const std::tuple<TArgs...>&, std::string&&);
+		};
+
+		template<typename T>
+		void Printer::printElementsCont(const T& ar, std::string&& _name, int N)
+		{
+			std::cout << Names[_name];
+			if (N > -1)
+				std::cout << N;
+			printOpenBrace();
+			for (const auto& x : ar)
 			{
-				constexpr size_t SZ = std::tuple_size<
-					std::tuple<TArgs... >> ::value;
-				std::cout << Names[_name] << SZ;
-				printOpenBrace();
-				TuplePrinter<SZ>::print(tup);
+				typedef typename std::remove_const_t<
+					typename std::remove_reference_t<decltype(x) >> TT;
+				if (std::is_same<std::string, TT>::value)
+					std::cout << "\"" << x << "\"" << delimiter;
+				else
+					std::cout << x << delimiter;
+			}
+			if (N)
 				for (size_t i = 0; i < delimiter.size(); ++i)
 					std::cout << '\b';
-				printEndBrace();
-			}
-		};
+			printEndBrace();
+			return;
+		}
+
+		template<typename T>
+		void Printer::printElementsPtr(const T& ptr, std::string&& _name)
+		{
+			std::cout << Names[_name];
+			printOpenBrace();
+			typedef typename std::remove_const_t<
+				typename std::remove_reference_t<decltype(*ptr) >> TT;
+			if (std::is_same<std::string, TT>::value)
+				std::cout << "\"" << *ptr << "\"";
+			else
+				std::cout << *ptr;
+			printEndBrace();
+			return;
+		}
+
+		template<typename... TArgs>
+		void Printer::printElementsTup(const std::tuple<TArgs...>& tup, std::string&& _name)
+		{
+			constexpr size_t SZ = std::tuple_size<
+				std::tuple<TArgs... >> ::value;
+			std::cout << Names[_name] << SZ;
+			printOpenBrace();
+			TuplePrinter<SZ>::print(tup);
+			for (size_t i = 0; i < delimiter.size(); ++i)
+				std::cout << '\b';
+			printEndBrace();
+		}
 
 		class BoxBraces : public Printer
 		{
@@ -137,27 +228,27 @@ namespace printers
 		{
 		public:
 			virtual void printOpenBrace() final { std::cout << "{"; }
-			virtual void printEndBrace()  final { std::cout << "}"; }
+			virtual void printEndBrace()	final { std::cout << "}"; }
 		};
 
 		class ParaBraces : public Printer
 		{
 		public:
 			virtual void printOpenBrace() final { std::cout << "("; }
-			virtual void printEndBrace()  final { std::cout << ")"; }
+			virtual void printEndBrace()	final { std::cout << ")"; }
 		};
 
 		class AngleBraces : public Printer
 		{
 		public:
 			virtual void printOpenBrace() final { std::cout << "<"; }
-			virtual void printEndBrace()  final { std::cout << ">"; }
+			virtual void printEndBrace()	final { std::cout << ">"; }
 		};
 	}
-	Helpers::BoxBraces    boxBraces;
-	Helpers::CurlyBraces  curlyBraces;
-	Helpers::ParaBraces   paraBraces;
-	Helpers::AngleBraces  angleBraces;
+	Helpers::BoxBraces		boxBraces;
+	Helpers::CurlyBraces	curlyBraces;
+	Helpers::ParaBraces	 paraBraces;
+	Helpers::AngleBraces	angleBraces;
 
 	template<typename T1,
 		typename T2> std::ostream&
@@ -199,10 +290,10 @@ namespace printers
 	}
 
 	template<typename T>
-  struct is_reverse_iterator : false_type { };
+	struct is_reverse_iterator : false_type { };
 
-  template<typename T>
-  struct is_reverse_iterator<reverse_iterator<T>> : true_type { };
+	template<typename T>
+	struct is_reverse_iterator<reverse_iterator<T>> : true_type { };
 
 	template<typename T,
 		typename S = typename std::iterator_traits<T>::reference>
@@ -291,7 +382,7 @@ namespace printers
 		return xx;
 	}
 
-  template<typename T, typename _Hasher,
+	template<typename T, typename _Hasher,
 		typename _Key, typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
 			const std::unordered_multiset<T, _Hasher, _Key, _Alloc>& ar)
@@ -312,7 +403,7 @@ namespace printers
 		return xx;
 	}
 
-  template<typename T, typename _Pr,
+	template<typename T, typename _Pr,
 		typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
 			const std::multiset<T, _Pr, _Alloc>& ar)
@@ -333,7 +424,7 @@ namespace printers
 		return xx;
 	}
 
-  template<typename T1, typename T2,
+	template<typename T1, typename T2,
 		typename _Pr, typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
 			const std::multimap<T1, T2, _Pr, _Alloc>& ar)
