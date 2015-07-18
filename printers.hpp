@@ -5,7 +5,7 @@
 
 // Comment out below line to show address of pointer
 // instead of value in it.
-//#define SHOW_ADDR
+ #define SHOW_ADDR
 
 #include <iostream>
 #include <unordered_map>
@@ -177,7 +177,7 @@ namespace printers
 	}
 
 // for std::vector<>
-#ifdef _GLIBCXX_VECTOR
+#if defined(_GLIBCXX_VECTOR) || defined(_LIBCPP_VECTOR)
 
 	template<typename T, typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
@@ -245,7 +245,7 @@ namespace printers
 	}
 
 // for std::array<>
-#ifdef _GLIBCXX_ARRAY
+#if defined(_GLIBCXX_ARRAY) || defined(_LIBCPP_ARRAY)
 	template<typename T, size_t N> std::ostream&
 		operator<<(std::ostream& xx,
 			const std::array<T, N>& ar)
@@ -256,7 +256,7 @@ namespace printers
 #endif
 
 // for std::list<>
-#ifdef _GLIBCXX_LIST
+#if defined(_GLIBCXX_LIST) || defined(_LIBCPP_LIST)
 	template<typename T, typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
 			const std::list<T, _Alloc>& ar)
@@ -267,7 +267,7 @@ namespace printers
 #endif
 
 // for std::forward_list<>
-#ifdef _GLIBCXX_FORWARD_LIST
+#if defined(_GLIBCXX_FORWARD_LIST) || defined(_LIBCPP_FORWARD_LIST)
 	template<typename T, typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
 			const std::forward_list<T, _Alloc>& ar)
@@ -280,8 +280,8 @@ namespace printers
 	}
 #endif
 
-// for std::unordered_set<>
-#ifdef _GLIBCXX_UNORDERED_SET
+// for std::unordered_set<> & std::unordered_multiset<>
+#if defined(_GLIBCXX_UNORDERED_SET) || defined(_LIBCPP_UNORDERED_SET)
 	template<typename T, typename _Hasher,
 		typename _Key, typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
@@ -290,23 +290,8 @@ namespace printers
 		boxBraces.printElementsCont(ar, "unordered_set", ar.size());
 		return xx;
 	}
-#endif
 
-// for std::set<>
-#ifdef _GLIBCXX_SET
-	template<typename T, typename _Pr,
-		typename _Alloc> std::ostream&
-		operator<<(std::ostream& xx,
-			const std::set<T, _Pr, _Alloc>& ar)
-	{
-		boxBraces.printElementsCont(ar, "set", ar.size());
-		return xx;
-	}
-#endif
-
-// for std::unordered_multiset<>
-#ifdef _GLIBCXX_UNORDERED_SET
-	template<typename T, typename _Hasher,
+  template<typename T, typename _Hasher,
 		typename _Key, typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
 			const std::unordered_multiset<T, _Hasher, _Key, _Alloc>& ar)
@@ -316,9 +301,18 @@ namespace printers
 	}
 #endif
 
-// for std::multiset<>
-#ifdef _GLIBCXX_SET
+// for std::set<> & std::multiset<>
+#if defined(_GLIBCXX_SET) || defined(_LIBCPP_SET)
 	template<typename T, typename _Pr,
+		typename _Alloc> std::ostream&
+		operator<<(std::ostream& xx,
+			const std::set<T, _Pr, _Alloc>& ar)
+	{
+		boxBraces.printElementsCont(ar, "set", ar.size());
+		return xx;
+	}
+
+  template<typename T, typename _Pr,
 		typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
 			const std::multiset<T, _Pr, _Alloc>& ar)
@@ -328,8 +322,8 @@ namespace printers
 	}
 #endif
 
-// for std::map<>
-#ifdef _GLIBCXX_MAP
+// for std::map<> & std::multimap<>
+#if defined(_GLIBCXX_MAP) || defined(_LIBCPP_MAP)
 	template<typename T1, typename T2,
 		typename _Pr, typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
@@ -338,23 +332,8 @@ namespace printers
 		boxBraces.printElementsCont(ar, "map", ar.size());
 		return xx;
 	}
-#endif
 
-// for std::unordered_map<>
-#ifdef _GLIBCXX_UNORDERED_MAP
-	template<typename T1, typename T2, typename _Hasher,
-		typename _Key, typename _Alloc> std::ostream&
-		operator<<(std::ostream& xx,
-			const std::unordered_map<T1, T2, _Hasher, _Key, _Alloc>& ar)
-	{
-		boxBraces.printElementsCont(ar, "unordered_map", ar.size());
-		return xx;
-	}
-#endif
-
-// for std::multimap<>
-#ifdef _GLIBCXX_MAP
-	template<typename T1, typename T2,
+  template<typename T1, typename T2,
 		typename _Pr, typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
 			const std::multimap<T1, T2, _Pr, _Alloc>& ar)
@@ -364,8 +343,17 @@ namespace printers
 	}
 #endif
 
-// for std::unordered_multimap<>
-#ifdef _GLIBCXX_UNORDERED_MAP
+// for std::unordered_map<> & std::unordered_multimap<>
+#if defined(_GLIBCXX_UNORDERED_MAP) || defined(_LIBCPP_UNORDERED_MAP)
+	template<typename T1, typename T2, typename _Hasher,
+		typename _Key, typename _Alloc> std::ostream&
+		operator<<(std::ostream& xx,
+			const std::unordered_map<T1, T2, _Hasher, _Key, _Alloc>& ar)
+	{
+		boxBraces.printElementsCont(ar, "unordered_map", ar.size());
+		return xx;
+	}
+
 	template<typename T1, typename T2, typename _Hasher,
 		typename _Key, typename _Alloc> std::ostream&
 		operator<<(std::ostream& xx,
@@ -377,7 +365,7 @@ namespace printers
 #endif
 
 // for std::shared_ptr<> and std::unique_ptr<>
-#ifdef _GLIBCXX_MEMORY
+#if defined(_GLIBCXX_MEMORY) || defined(_LIBCPP_MEMORY)
 	template<typename T> std::ostream&
 		operator<<(std::ostream& xx,
 			const std::shared_ptr<T>& sp)
