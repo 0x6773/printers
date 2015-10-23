@@ -41,6 +41,7 @@ namespace printers
 			{ "unordered_multimap", "ummap" },
 			{ "unordered_multiset", "umset" },
 			{ "unordered_set", "uset" },
+			{ "valarray", "valarr"},
 			{ "vector", "vec" },
 		};
 
@@ -196,6 +197,27 @@ namespace printers
 		boxBraces.printElementsCont(ar, "vector", ar.size());
 		return xx;
 	}
+
+#endif
+
+// for std::valarray<>
+#if defined(_GLIBCXX_VALARRAY) || defined(_LIBCPP_VALARRAY) || defined(_VALARRAY_)
+
+template<typename T> std::ostream&
+	operator<<(std::ostream& xx,
+		const std::valarray<T>& ar)
+{
+	boxBraces.printElementsCont(ar, "valarray", ar.size());
+	return xx;
+}
+
+template<typename T, typename R = typename T::value_type>
+	enable_if_t<is_convertible<T, valarray<R>>::value, std::ostream&>
+		operator<<(std::ostream& xx, const T& ar)
+{
+	cout << valarray<R>(ar);
+	return xx;
+}
 
 #endif
 
