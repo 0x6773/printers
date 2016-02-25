@@ -2,8 +2,6 @@
 
 #pragma once
 
-//#include "stdafx.h"
-//#include "first.hpp"
 #include <bits/stdc++.h>
 
 namespace mydetails

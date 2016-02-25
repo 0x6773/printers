@@ -7,8 +7,9 @@
 // instead of value in it.
 //#define SHOW_ADDR
 
-#include "stdafx.h"
-#include "first.hpp"
+#include <unordered_map>
+#include <utility>
+#include <string>
 
 namespace printers
 {

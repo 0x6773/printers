@@ -1,11 +1,8 @@
-#define INCLUDE_ALL
-#include "stdafx.h"
-#include "first.hpp"
-#include "printers.hpp"
-#define PRINT_ALL
+#include <bits/stdc++.h>
 using namespace std;
-using namespace mydetails;
+#include "printers.hpp"
 using namespace printers;
+#define PRINT_ALL
 
 #ifndef LOL
 #define LOL(X) std::cout << #X << " : " << (X) << std::endl
