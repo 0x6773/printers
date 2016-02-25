@@ -213,10 +213,11 @@ template<typename T> std::ostream&
 }
 
 template<typename T, typename R = typename T::value_type>
-	enable_if_t<is_convertible<T, valarray<R>>::value, std::ostream&>
-		operator<<(std::ostream& xx, const T& ar)
+	std::enable_if_t<std::is_convertible<T,
+		std::valarray<R>>::value, std::ostream&>
+			operator<<(std::ostream& xx, const T& ar)
 {
-	cout << valarray<R>(ar);
+	std::cout << std::valarray<R>(ar);
 	return xx;
 }
 

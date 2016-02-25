@@ -1,6 +1,13 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <array>
+#include <map>
+#include <unordered_set>
+#include <list>
+#include <utility>
 using namespace std;
-#include "printers.hpp"
+#include <printers.hpp>
 using namespace printers;
 #define PRINT_ALL
 
