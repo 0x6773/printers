@@ -1,15 +1,18 @@
 # printers
-(c) Govind Sahai 2015
+(c) Govind Sahai 2016
 
-Checked on `g++-5` and `Visual Studio 2015 RC`
+**Now its easier to use printers**
+# How to install?
 
-# How to use?
-`#include` to include the header file.
-
-    #include "printers.hpp"
+    $ git clone https://github.com/mafiya69/printers --depth 1
+    $ cd printers
+    $ cmake .
+    $ sudo make install
     
-Add `using namespace printers;` to get all `functions/classes` into global scope.
+# How to use?
 
+    // Your C++ File
+    #include <printers.hpp>
     using namespace printers;
     
 Now use the printers : 
