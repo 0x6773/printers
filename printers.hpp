@@ -53,9 +53,7 @@ namespace printers
 			static void print(const std::tuple<Types...>& ar)
 			{
 				TuplePrinter<N - 1>::print(ar);
-				typedef typename std::remove_const<
-					typename std::remove_reference<
-					decltype(std::get<N - 1>(ar))>::type>::type TT;
+				using TT = std::remove_const_t<std::remove_reference_t<decltype(std::get<N - 1>(ar))>>;
 				if (std::is_same<std::string, TT>::value)
 					std::cout << "\"" << std::get<N - 1>(ar) << "\"" << delimiter;
 				else
@@ -96,8 +94,7 @@ namespace printers
 			printOpenBrace();
 			for (const auto& x : ar)
 			{
-				typedef typename std::remove_const_t<
-					typename std::remove_reference_t<decltype(x) >> TT;
+				using TT = typename std::remove_const_t<std::remove_reference_t<decltype(x)>>;
 				if (std::is_same<std::string, TT>::value)
 					std::cout << "\"" << x << "\"" << delimiter;
 				else
@@ -115,8 +112,7 @@ namespace printers
 		{
 			std::cout << Names[_name];
 			printOpenBrace();
-			typedef typename std::remove_const_t<
-				typename std::remove_reference_t<decltype(*ptr) >> TT;
+			using TT = std::remove_const_t<std::remove_reference_t<decltype(*ptr)>>;
 			if (std::is_same<std::string, TT>::value)
 				std::cout << "\"" << *ptr << "\"";
 			else
@@ -141,29 +137,29 @@ namespace printers
 		class BoxBraces : public Printer
 		{
 		public:
-			virtual void printOpenBrace() final { std::cout << "["; }
-			virtual void printEndBrace() final { std::cout << "]"; }
+			virtual void printOpenBrace() override final { std::cout << "["; }
+			virtual void printEndBrace() override final { std::cout << "]"; }
 		};
 
 		class CurlyBraces : public Printer
 		{
 		public:
-			virtual void printOpenBrace() final { std::cout << "{"; }
-			virtual void printEndBrace()  final { std::cout << "}"; }
+			virtual void printOpenBrace() override final { std::cout << "{"; }
+			virtual void printEndBrace() override final { std::cout << "}"; }
 		};
 
 		class ParaBraces : public Printer
 		{
 		public:
-			virtual void printOpenBrace() final { std::cout << "("; }
-			virtual void printEndBrace()  final { std::cout << ")"; }
+			virtual void printOpenBrace() override final { std::cout << "("; }
+			virtual void printEndBrace() override final { std::cout << ")"; }
 		};
 
 		class AngleBraces : public Printer
 		{
 		public:
-			virtual void printOpenBrace() final { std::cout << "<"; }
-			virtual void printEndBrace()  final { std::cout << ">"; }
+			virtual void printOpenBrace() override final { std::cout << "<"; }
+			virtual void printEndBrace() override final { std::cout << ">"; }
 		};
 	}
 	Helpers::BoxBraces    boxBraces;
