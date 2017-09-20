@@ -208,7 +208,7 @@ template<typename T> std::ostream&
 	return out;
 }
 
-template<typename T, typename R = typename T::value_type>
+template<typename T, typename R = std::decay_t<typename T::value_type>>
 	std::enable_if_t<std::is_convertible<T,
 		std::valarray<R>>::value, std::ostream&>
 			operator<<(std::ostream& out, const T& ar)

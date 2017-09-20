@@ -6,6 +6,7 @@
 #include <unordered_set>
 #include <list>
 #include <utility>
+#include <bits/stdc++.h>
 using namespace std;
 #include "printers.hpp"
 using namespace printers;
@@ -37,9 +38,9 @@ int main()
   cout<<endl;
 
   // std::array<>
-  array<string,4> ar05 = {"Govind","Sahai","ABVG","dfs"};
-  array<int, 8> ar06 = {6,3,6,3,5,6,0,9};
-  array<int[4], 3> ar07 = {1,2,3,4,5,6,7,8,9,10,11,12};
+  array<string,4> ar05 = {{"Govind","Sahai","ABVG","dfs"}};
+  array<int, 8> ar06 = {{6,3,6,3,5,6,0,9}};
+  array<int[4], 3> ar07 = {{{1,2,3,4},{5,6,7,8},{9,10,11,12}}};
   cout<<"std::arrays<> : "<<endl;
   LOL(ar05);
 #ifdef PRINT_ALL
