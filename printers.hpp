@@ -108,7 +108,7 @@ namespace printers
 		}
 
 		template<typename T>
-		void Printer::printElementsPtr(ostream& out, const T& ptr, std::string&& _name)
+		void Printer::printElementsPtr(std::ostream& out, const T& ptr, std::string&& _name)
 		{
 			out << Names[_name];
 			printOpenBrace(out);
